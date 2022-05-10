@@ -57,11 +57,13 @@ class Parser:
         line and column numbers for statements and rules.
         """
         code += "\n"  # to overcome lark bug (#489)
-        return (
+        result = (
             self._parser_with_metadata.parse(code)
             if gather_metadata
             else self._parser.parse(code)
         )
+        print(result.pretty())
+        return result
 
     def parse_comments(self, code: str) -> Tree:
         """Parses GDScript code and returns comments - both standalone, and inline."""
@@ -75,7 +77,7 @@ class Parser:
         self,
         name: str,
         add_metadata: bool = False,
-        grammar_filename: str = "gdscript.lark",
+        grammar_filename: str = "gdflow.lark",
     ) -> Tree:
         version: str = pkg_resources.get_distribution("gdtoolkit").version
 
@@ -87,11 +89,13 @@ class Parser:
 
         tree = None
         if os.path.exists(cache_filepath) and self._use_grammar_cache:
-            try:
-                tree = self.load(cache_filepath)
-            except ValueError:
-                # pickle errors on unsupported protocols - newer python versions (#93)
-                pass
+            pass
+            # do not cache while development
+            # try:
+            #     tree = self.load(cache_filepath)
+            # except ValueError:
+            #     # pickle errors on unsupported protocols - newer python versions (#93)
+            #     pass
         if tree is None:
             tree = Lark.open(
                 grammar_filepath,
