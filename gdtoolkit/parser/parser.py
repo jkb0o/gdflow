@@ -51,7 +51,7 @@ class Parser:
         self._use_grammar_cache = True
         self._cache_dirpath: str = os.path.join(get_cache_directory(), "gdtoolkit")
 
-    def parse(self, code: str, gather_metadata: bool = False) -> Tree:
+    def parse(self, code: str, gather_metadata: bool = True) -> Tree:
         """Parses GDScript code and returns an intermediate representation as a Lark Tree.
         If gather_metadata is True, parsing is slower but the returned Tree comes with
         line and column numbers for statements and rules.
